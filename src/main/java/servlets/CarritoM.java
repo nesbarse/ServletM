@@ -99,11 +99,13 @@ public class CarritoM extends HttpServlet {
             //--------------------------------------------------------------//
 
             //------------------- Listado del carrito ----------------------//
-            if ("carro".equalsIgnoreCase(request.getParameter("op"))) {
-                ArrayList<Producto> carrito2 = (ArrayList) request.getSession().getAttribute("carrito");
+            if ("list".equalsIgnoreCase(request.getParameter("op"))) {
+                if ("cart".equalsIgnoreCase(request.getParameter("ob"))) {
+                    ArrayList<Producto> carrito2 = (ArrayList) request.getSession().getAttribute("carrito");
 
-                Gson oGson = new GsonBuilder().create();
-                out.print(oGson.toJson(carrito2));
+                    Gson oGson = new GsonBuilder().create();
+                    out.print(oGson.toJson(carrito2));
+                }
             }
             //--------------------------------------------------------------//
 
@@ -130,7 +132,13 @@ public class CarritoM extends HttpServlet {
                         }
                     }
                 }
+
+                for (int k = 0; k < carrito3.size(); k++) {
+                    carrito3.remove(k);
+                }
+
                 request.getSession().setAttribute("existencias", existencias3);
+                request.getSession().setAttribute("carrito", carrito3);
 
             }
             //--------------------------------------------------------------//
@@ -166,13 +174,29 @@ public class CarritoM extends HttpServlet {
                     String nombre = request.getParameter("nombre");
                     ArrayList<Producto> carrito3 = (ArrayList) request.getSession().getAttribute("carrito");
                     Producto oProducto = new Producto();
-                    
-                    for(int i = 0; i < carrito3.size(); i++){
+
+                    for (int i = 0; i < carrito3.size(); i++) {
                         oProducto = carrito3.get(i);
-                        if(oProducto.getNombre().equalsIgnoreCase(nombre)){
+                        if (oProducto.getNombre().equalsIgnoreCase(nombre)) {
                             carrito3.remove(i);
                         }
                     }
+
+                    request.getSession().setAttribute("carrito", carrito3);
+                }
+            }
+            //----------------------------------------------------------------//
+
+            //-------------------- Vaciar el carrito -------------------------//
+            if ("empty".equalsIgnoreCase(request.getParameter("op"))) {
+                if ("cart".equalsIgnoreCase(request.getParameter("ob"))) {
+                    ArrayList<Producto> carrito3 = (ArrayList) request.getSession().getAttribute("carrito");
+
+                    for (int k = 0; k < carrito3.size(); k++) {
+                        carrito3.remove(k);
+                    }
+                    
+                    request.getSession().setAttribute("carrito", carrito3);
                 }
             }
             //----------------------------------------------------------------//
